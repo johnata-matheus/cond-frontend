@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'cond-management-production-4525.up.railway.app/api',
+  baseURL: 'http://cond-management-production-4525.up.railway.app/api',
   withCredentials: true,
 })
 
