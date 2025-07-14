@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from 'vue-router'
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 import { Toaster } from '@/components/ui/toast';
 import Header from '@/components/layout/Header.vue'
 
@@ -15,6 +14,5 @@ const route = useRoute();
     </main>
     <Toaster />
   </div>
-  <VueQueryDevtools />
 </template>
 

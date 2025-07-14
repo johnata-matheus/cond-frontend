@@ -41,10 +41,7 @@ const newVisit = ref({
 
 const showCarFields = ref(false)
 
-const isFormValid = computed(() => {
-  const result = visitSchema.safeParse(newVisit.value)
-  return result.success
-})
+const isFormValid = computed(() => visitSchema.safeParse(newVisit.value).success)
 
 const touchedFields = reactive<Record<string, boolean>>({
   visitor_name: false,
@@ -97,6 +94,23 @@ const closeDialog = async () => {
   isDialogOpen.value = false
 }
 
+// >>>>>>>>>>>> ALTERAÇÃO PRINCIPAL <<<<<<<<<<<<<<
+let dateValue: DateValue | undefined = undefined
+
+watch(
+  () => dateValue,
+  (val) => {
+    newVisit.value.visit_date = val ? val.toString() : ''
+  }
+)
+watch(
+  () => newVisit.value.visit_date,
+  (val) => {
+    if (!val) dateValue = undefined
+    else dateValue = parseDate(val)
+  }
+)
+
 const handleCreateVisit = async () => {
   Object.keys(touchedFields).forEach(k => touchedFields[k] = true)
   if (!isFormValid.value) return
@@ -134,15 +148,6 @@ const handleCreateVisit = async () => {
 }
 
 const df = new DateFormatter('pt-BR', { dateStyle: 'long' })
-const dateValue = ref<DateValue | undefined>(undefined)
-
-watch(dateValue, (val) => {
-  newVisit.value.visit_date = val ? val.toString() : ''
-})
-watch(() => newVisit.value.visit_date, (val) => {
-  if (!val) dateValue.value = undefined
-  else dateValue.value = parseDate(val)
-})
 </script>
 
 <template>
@@ -182,7 +187,11 @@ watch(() => newVisit.value.visit_date, (val) => {
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="w-auto p-0">
-                <Calendar v-model="dateValue" initial-focus />
+                <Calendar
+                  :modelValue="dateValue"
+                  @update:modelValue="val => (dateValue = val)"
+                  initial-focus
+                />
               </PopoverContent>
             </Popover>
             <span v-if="errors.visit_date" class="text-red-500 text-base">{{ errors.visit_date }}</span>

@@ -11,12 +11,6 @@ const router = createRouter({
       // meta: { requiresAuth: true },
     },
     {
-      path: '/calendar',
-      name: 'calendar',
-      component: () => import('../views/CalendarView.vue'),
-      // meta: { requiresAuth: true },
-    },
-    {
       path: '/register',
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
