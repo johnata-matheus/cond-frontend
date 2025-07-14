@@ -5,20 +5,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/toast'
-import { useResident } from '@/composables/resident'
 import { useRouter } from 'vue-router'
+import { createResident } from '@/services/residentService'
 
 const apartment = ref('')
 const block = ref('')
 const phone = ref('')
 const active = ref(true)
 const { toast } = useToast()
-const { isPending, error, registerResident } = useResident()
 const router = useRouter()
+const isPending = ref(false)
 
 const handleRegisterResident = async () => {
+  isPending.value = true
   try {
-    await registerResident({
+    await createResident({
       apartment: apartment.value,
       block: block.value || null,
       phone: phone.value || null,
@@ -33,12 +34,14 @@ const handleRegisterResident = async () => {
     block.value = ''
     phone.value = ''
     router.push('/visits')
-  } catch (e) {
+  } catch (e: any) {
     toast({
       title: 'Erro',
-      description: error.value || 'Não foi possível cadastrar o morador.',
+      description: e.message || 'Não foi possível cadastrar o morador.',
       variant: 'destructive',
     })
+  } finally {
+    isPending.value = false
   }
 }
 </script>
