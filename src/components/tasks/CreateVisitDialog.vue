@@ -92,7 +92,6 @@ const isPending = ref(false)
 const emit = defineEmits(['visit-created'])
 
 const isDialogOpen = ref(false)
-const openDialog = () => { isDialogOpen.value = true }
 const closeDialog = async () => {
   await resetForm()
   isDialogOpen.value = false
@@ -121,8 +120,8 @@ const handleCreateVisit = async () => {
       variant: 'default',
       duration: 4000,
     })
-    emit('visit-created') // avisa o pai para atualizar a lista
-    closeDialog() // fecha o modal e reseta
+    emit('visit-created')
+    closeDialog()
   } catch (e: any) {
     toast({
       title: 'Erro',

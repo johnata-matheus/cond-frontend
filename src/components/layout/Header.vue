@@ -7,22 +7,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from '@/components/ui/navigation-menu'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { CircleUser, Menu, Package2, Search } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
-import { fetchCurrentUser } from '@/services/userService' // ajuste o path se necessário
+import { fetchCurrentUser } from '@/services/userService'
 
 defineOptions({ name: 'AppHeader' })
 
@@ -98,14 +89,7 @@ onMounted(async () => {
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full overflow-hidden p-0">
-              <template v-if="user && user.profile_photo_url">
-                <img
-                  :src="user.profile_photo_url"
-                  alt="Avatar"
-                  class="h-10 w-10 rounded-full object-cover"
-                />
-              </template>
-              <template v-else>
+              <template>
                 <CircleUser class="h-5 w-5" />
               </template>
               <span class="sr-only">Toggle user menu</span>

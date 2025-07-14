@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { fetchAllVisits } from '@/services/visitService'
+import type { IVisit } from '@/interfaces/IVisit'
 
-const visits = ref([])
+const visits = ref<IVisit[]>([])
 const isLoading = ref(true)
-const error = ref(null)
+const error = ref<string | null>(null)
 
 function formatDate(dateStr: string) {
   if (!dateStr) return '-'
@@ -19,7 +20,6 @@ function formatDate(dateStr: string) {
   })
 }
 
-// Função para atualizar a lista de visitas
 const loadVisits = async () => {
   isLoading.value = true
   try {
@@ -33,11 +33,8 @@ const loadVisits = async () => {
 }
 
 onMounted(loadVisits)
-
-// Exporte para ser usada no componente pai (caso use <TaskListTab @visit-created />)
 defineExpose({ loadVisits })
 </script>
-
 <template>
   <div class="mx-auto grid w-full max-w-6xl">
     <div v-if="isLoading" class="text-center py-8">Carregando...</div>

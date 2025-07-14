@@ -6,8 +6,6 @@ import TaskListTab from '@/components/tasks/TaskListTab.vue'
 
 const isDialogOpen = ref(false)
 const openDialog = () => { isDialogOpen.value = true }
-const closeDialog = () => { isDialogOpen.value = false }
-
 const taskListTab = ref()
 
 const handleVisitCreated = () => {

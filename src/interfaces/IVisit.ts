@@ -1,5 +1,5 @@
 export interface IVisit {
-  id?: number
+  id: number
   visitor_name: string
   visitor_phone?: string | null
   visit_date: string
@@ -8,3 +8,5 @@ export interface IVisit {
   license_plate?: string | null
   notes?: string | null
 }
+
+export type ICreateVisit = Omit<IVisit, 'id'>

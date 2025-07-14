@@ -1,5 +1,6 @@
 import api from '@/api/axios'
 import type { IVisit } from '@/interfaces/IVisit'
+import type { ICreateVisit } from '@/interfaces/IVisit'
 
 export const fetchAllVisits = async (status?: string) => {
   const { data } = await api.get('/visits', {
@@ -8,7 +9,7 @@ export const fetchAllVisits = async (status?: string) => {
   return data.data
 }
 
-export const createVisit = async (visitData: IVisit) => {
+export const createVisit = async (visitData: ICreateVisit) => {
   const { data } = await api.post('/visits', visitData)
   return data
 }
