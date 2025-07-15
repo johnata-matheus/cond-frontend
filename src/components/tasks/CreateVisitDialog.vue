@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import { computed, h, nextTick, reactive, ref, watch } from 'vue'
+import { computed, h, nextTick, reactive, ref } from 'vue'
 import { z } from 'zod'
 import Input from '@/components/ui/input/Input.vue'
 import Label from '@/components/ui/label/Label.vue'
 import Button from '@/components/ui/button/Button.vue'
 import Switch from '@/components/ui/switch/Switch.vue'
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { CheckIcon, CalendarIcon } from 'lucide-vue-next'
+import { CheckIcon } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import {
-  DateFormatter,
-  getLocalTimeZone,
-  parseDate,
-  type DateValue,
-} from '@internationalized/date'
 import { createVisit } from '@/services/visitService'
+
+function getToday() {
+  const today = new Date()
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+  return today.toISOString().slice(0, 10)
+}
+const minDate = getToday()
 
 const visitSchema = z.object({
   visitor_name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres.'),
@@ -94,23 +93,6 @@ const closeDialog = async () => {
   isDialogOpen.value = false
 }
 
-// >>>>>>>>>>>> ALTERAÇÃO PRINCIPAL <<<<<<<<<<<<<<
-let dateValue: DateValue | undefined = undefined
-
-watch(
-  () => dateValue,
-  (val) => {
-    newVisit.value.visit_date = val ? val.toString() : ''
-  }
-)
-watch(
-  () => newVisit.value.visit_date,
-  (val) => {
-    if (!val) dateValue = undefined
-    else dateValue = parseDate(val)
-  }
-)
-
 const handleCreateVisit = async () => {
   Object.keys(touchedFields).forEach(k => touchedFields[k] = true)
   if (!isFormValid.value) return
@@ -146,8 +128,6 @@ const handleCreateVisit = async () => {
     isPending.value = false
   }
 }
-
-const df = new DateFormatter('pt-BR', { dateStyle: 'long' })
 </script>
 
 <template>
@@ -162,39 +142,25 @@ const df = new DateFormatter('pt-BR', { dateStyle: 'long' })
           <div>
             <Label for="visitor_name">Nome do Visitante</Label>
             <Input id="visitor_name" v-model="newVisit.visitor_name" @blur="handleBlur('visitor_name')" />
-            <span v-if="errors.visitor_name" class="text-red-500 text-base">{{ errors.visitor_name }}</span>
+            <span v-if="errors.visitor_name" class="text-red-500 text-sm">{{ errors.visitor_name }}</span>
           </div>
           <div>
             <Label for="visitor_phone">Telefone</Label>
             <Input id="visitor_phone" v-model="newVisit.visitor_phone" @blur="handleBlur('visitor_phone')" />
-            <span v-if="errors.visitor_phone" class="text-red-500 text-base">{{ errors.visitor_phone }}</span>
+            <span v-if="errors.visitor_phone" class="text-red-500 text-sm">{{ errors.visitor_phone }}</span>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <Label for="visit_date">Data da Visita</Label>
-            <Popover>
-              <PopoverTrigger as-child>
-                <Button
-                  variant="outline"
-                  :class="cn(
-                    'w-full justify-start text-left font-normal',
-                    !dateValue && 'text-muted-foreground',
-                  )"
-                >
-                  <CalendarIcon class="mr-2 h-4 w-4" />
-                  {{ dateValue ? df.format(dateValue.toDate(getLocalTimeZone())) : "Escolha a data" }}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent class="w-auto p-0">
-                <Calendar
-                  :modelValue="dateValue"
-                  @update:modelValue="val => (dateValue = val)"
-                  initial-focus
-                />
-              </PopoverContent>
-            </Popover>
-            <span v-if="errors.visit_date" class="text-red-500 text-base">{{ errors.visit_date }}</span>
+            <Input
+              id="visit_date"
+              type="date"
+              v-model="newVisit.visit_date"
+              @blur="handleBlur('visit_date')"
+              :min="minDate"
+            />
+            <span v-if="errors.visit_date" class="text-red-500 text-sm">{{ errors.visit_date }}</span>
           </div>
         </div>
         <div class="mt-4 flex items-center gap-2">

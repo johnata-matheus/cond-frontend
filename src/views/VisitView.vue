@@ -19,7 +19,7 @@ const handleVisitCreated = () => {
     <div class="mx-auto grid w-full max-w-6xl gap-2">
       <TitleBar
         title="Visitas"
-        subtitle="Gerencie suas visitas"
+        subtitle="Agende suas visitas antecipadamente"
         text-button="Agendar visita"
         @button-click="openDialog"
       />
