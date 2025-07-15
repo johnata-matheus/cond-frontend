@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: 'https://cond-management-production-4525.up.railway.app/api',
+  withCredentials: true,
 })
 
 api.interceptors.request.use((config) => {
